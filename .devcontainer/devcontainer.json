@@ -47,7 +47,8 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-python.python",
-		"ms-python.vscode-pylance"
+		"ms-python.vscode-pylance",
+		"njpwerner.autodocstring"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -63,7 +64,7 @@
 	// siehe: https://github.com/microsoft/vscode-remote-release/issues/2590
 	"runArgs": [
 		"--name",
-		"tmp_container",
-		"--env-file",
-		"${localWorkspaceFolder}/.devcontainer/.env"
+		"bibtex-to-dblp",
+		// "--env-file",
+		// "${localWorkspaceFolder}/.devcontainer/.env"
 	],}
