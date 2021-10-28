@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Python script to parse a bibtext file to a bibtext file with dblp references and styling.
+"""This python script parses an incomplete BibTeX file to a BibTeX file with dblp references and styling.
 
 Example:
     python bibtext_to_dblp <bibtext input file> <output file>
@@ -12,10 +12,10 @@ import time
 
 
 def parse_bibtext_file_titles(file_path: str) -> list[str]:
-    """Parse a bibtext file titles, using pybibtext, into a list of titles.
+    """Function to parse the titles of the publications from a BibTeX file.
 
     Args:
-        file_path (str): File path of the file to parse.
+        file_path (str): File path of the BibTeX file to parse.
 
     Returns:
         list[str]: List with the parsed titles.
@@ -44,7 +44,7 @@ def get_url(title: str) -> Optional[str]:
     """Search DBLP with a publication title and parse the pdf from the best result.json.
 
     Args:
-        title (str): Title of th ePublicatiuon to search for.
+        title (str): Title of the publication to search for.
 
     Returns:
         Optional[str]: URL of the DBLP page of the publication or None.
@@ -66,7 +66,7 @@ def get_dblp_bibtext(url: str) -> Optional[str]:
         url (str): Url to the publication site.
 
     Returns:
-        Optional[str]: Bibtext reference for the publication or None if an error occurred.
+        Optional[str]: Bibtex reference for the publication or None if an error occurred.
     """
     r = requests.get(url + ".bib")
     if r.status_code == 200:
@@ -76,7 +76,7 @@ def get_dblp_bibtext(url: str) -> Optional[str]:
 
 
 def bibtext_to_dblp(outpu_file: str, input_file: str):
-    """Convert a bibtext file into a bibtext file with dblp styling.
+    """Convert an incomplete BibTeX file into a complete BibTeX file with dblp styling.
 
     Args:
         outpu_file (str): Destination for the new file.
@@ -93,11 +93,12 @@ def bibtext_to_dblp(outpu_file: str, input_file: str):
                 errors.append(publication)
         else:
             errors.append(publication)
+        time.sleep(1)  # abide dblp crawl-delay
 
     if dblp_citations:
         with open(outpu_file, "w") as outFile:
             outFile.write("\n".join(dblp_citations))
-        print("New bibtext file written to", site_url)
+        print("New BibTeX file written to", site_url)
     else:
         print("No citations to write.")
     if errors:
