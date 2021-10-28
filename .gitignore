@@ -142,3 +142,4 @@ cython_debug/
 # My Files 
 data/
 .devcontainer/.env
+.vscode
