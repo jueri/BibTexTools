@@ -7,7 +7,7 @@ The CLI tool parses publication titles from a BibTeX and retrieves high-quality 
 ## Installation:
 **Clean BibTeX** can be installed using pip and this repository:
 ```
-pip install git+https://github.com/stella-project/syntax_checker_CLI.git
+pip install git+https://github.com/jueri/clean_bibtex.git
 ```
 
 Alternatively, you can clone this repository and install it from source.
