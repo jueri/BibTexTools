@@ -6,7 +6,7 @@ Example:
 """
 
 import requests
-import os
+import click
 from typing import Optional
 import time
 
@@ -36,7 +36,7 @@ def parse_bibtext_file_titles(file_path: str) -> list[str]:
         print("Could not parse, bibtext file is malformed.")
         raise
     except BaseException as err:
-        print(f"Unexpected {err=}, {type(err)=}")
+        print(f"Unexpected {err}, {type(err)}")
         raise
 
 
@@ -75,7 +75,10 @@ def get_dblp_bibtext(url: str) -> Optional[str]:
         return None
 
 
-def bibtext_to_dblp(outpu_file: str, input_file: str):
+@click.command()
+@click.argument("input_file")
+@click.argument("outpu_file")
+def clean_bibtex(outpu_file: str, input_file: str):
     """Convert an incomplete BibTeX file into a complete BibTeX file with dblp styling.
 
     Args:
@@ -84,29 +87,34 @@ def bibtext_to_dblp(outpu_file: str, input_file: str):
     """
     titles = parse_bibtext_file_titles(input_file)
     errors = []
-    dblp_citations = []
-    for publication in titles:
-        if site_url := get_url(publication):
-            if dblp_citation := get_dblp_bibtext(site_url):
-                dblp_citations.append(dblp_citation)
+    num_publications = str(len(titles))
+
+    click.echo(
+        "Requesting citation metadata for {num_publications} publications, this may take a while..."
+    )
+    with click.progressbar(length=len(titles)) as bar:
+        dblp_citations = []
+        for publication in titles:
+            if site_url := get_url(publication):
+                if dblp_citation := get_dblp_bibtext(site_url):
+                    dblp_citations.append(dblp_citation)
+                else:
+                    errors.append(" - " + publication)
             else:
-                errors.append(publication)
-        else:
-            errors.append(publication)
-        time.sleep(1)  # abide dblp crawl-delay
+                errors.append(" - " + publication)
+            time.sleep(1)  # abide dblp crawl-delay
+            bar.update(1)
 
     if dblp_citations:
         with open(outpu_file, "w") as outFile:
             outFile.write("\n".join(dblp_citations))
-        print("New BibTeX file written to", site_url)
+        click.echo(f"\nNew BibTeX file written to: {outpu_file}")
     else:
-        print("No citations to write.")
+        click.echo("No citations to write.")
     if errors:
-        print("Could not create citations for:")
-        print("\n".join(errors))
+        click.echo("\nCould not create citations for:")
+        click.echo("\n".join(errors))
 
 
 if __name__ == "__main__":
-    input_file = "repro_ecir_track.bib"
-    outpu_file = "repro_ecir_track_dblp.bib"
-    bibtext_to_dblp(outpu_file, input_file)
+    clean_bibtex()
