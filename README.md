@@ -2,6 +2,7 @@
 **Clean BibTeX** is a handy tool to resolve incomplete or misleading BibTeX references in computer science.
 The CLI tool parses publication titles from a BibTeX and retrieves high-quality references from [dblp](https://dblp.uni-trier.de/).
 
+<a href="https://huggingface.co/spaces/jueri/clean_bibtex"><img alt="Spaces Demo" src="https://img.shields.io/badge/-🤗 -Spaces-yellow?style=for-the-badge"></a>
 <br>
 
 ## Installation:
