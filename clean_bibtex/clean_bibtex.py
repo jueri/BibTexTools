@@ -89,9 +89,7 @@ def clean_bibtex(outpu_file: str, input_file: str):
     errors = []
     num_publications = str(len(titles))
 
-    click.echo(
-        "Requesting citation metadata for {num_publications} publications, this may take a while..."
-    )
+    click.echo("Requesting citation metadata for {num_publications} publications, this may take a while...")
     with click.progressbar(length=len(titles)) as bar:
         dblp_citations = []
         for publication in titles:
