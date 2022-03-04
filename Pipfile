@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+mypy = "*"
+types-requests = "*"
+
+[dev-packages]
+black = "*"
+pytest = "*"
+mypy = "*"
+ipykernel = "*"
+bibtextools = {editable = true, path = "."}
+
+[requires]
+python_version = "3"
