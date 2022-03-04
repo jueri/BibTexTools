@@ -76,12 +76,12 @@ class TestClassEntety:
         assert isinstance(empty_entry.journal, Journal_field)
 
     def test_author_abbreviation(self, entry_obj):
-        author_list_abbreviated = entry_obj.author.abbreviate(middle=True)
+        entry_obj = entry_obj.abbreviate_names(middle=True)
 
-        assert author_list_abbreviated[0] == "A1_Last, A. B."
-        assert author_list_abbreviated[1] == "A2_Last, A. B."
-        assert author_list_abbreviated[2] == "A3_Last, A. III."
-        assert author_list_abbreviated[3] == "A4_Last, A. B. Jr."
+        assert entry_obj.author.author_list[0].name_short == "A1_Last, A. B."
+        assert entry_obj.author.author_list[1].name_short == "A2_Last, A. B."
+        assert entry_obj.author.author_list[2].name_short == "A3_Last, A. III."
+        assert entry_obj.author.author_list[3].name_short == "A4_Last, A. B. Jr."
 
     def test_to_bibtex(self, entry_obj_full):
         bibtex_str = entry_obj_full.to_bibtex()

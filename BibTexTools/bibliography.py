@@ -1,3 +1,4 @@
+from __future__ import annotations
 import json
 import warnings
 from dataclasses import dataclass, field
@@ -79,7 +80,7 @@ class Author:
         self.last = last
         self.mid = [str]
 
-    def abbreviate(self, middle: bool) -> str:
+    def abbreviate(self, middle: bool) -> Author:
         """Abbreviate the author name, with or without middle names.
 
         Args:
@@ -113,17 +114,21 @@ class Author:
         else:
             last = self.last
 
+        self.first_short = _abbreviate_name(self.first)
         name_short = last + ", " + _abbreviate_name(self.first)
 
         if middle:
+            mid_short = []
             for name in self.mid:
+                mid_short.append(_abbreviate_name(name))
                 name_short += " " + _abbreviate_name(name)
+            self.mid_short = mid_short
 
         if " Jr." in self.last:
             name_short += " Jr."
 
-        self.short = name_short
-        return name_short
+        self.name_short = name_short
+        return self
 
 
 class Author_field(Field):
@@ -168,7 +173,7 @@ class Author_field(Field):
 
         return author_list
 
-    def abbreviate(self, middle: bool) -> List[str]:
+    def abbreviate(self, middle: bool) -> Author_field:
         """Abbreviate all authors from the author list.
 
         Args:
@@ -182,9 +187,14 @@ class Author_field(Field):
             author_list_abbreviated.append(author.abbreviate(middle))
 
         self.author_list_abbreviated = author_list_abbreviated
-        return author_list_abbreviated
+        return self
 
     def to_bibtex(self) -> str:
+        """Serielize into a BibTex string.
+
+        Returns:
+            str: Field as BibTex string.
+        """
         return self.name + " = " + self.value.replace(" and ", " and\n")
 
 
@@ -263,8 +273,23 @@ class Entry:
             bibtex = {**bibtex, **self.__getattribute__(field).to_dict()}  # join dicts
         return {self.key.value: bibtex}  # type: ignore
 
-    # abbreviate_names()  TODO
-    # abbreviate_journals()  TODO
+    def abbreviate_names(self, middle: bool) -> Entry:
+        """Abbreviate all author names from entry. The full names are preserved as `authors_full`.
+
+        Args:
+            middle (bool): Abbriviate or delete the moddle names.
+
+        Returns:
+            Entry: The full entry with the abbreviated and full names.
+        """
+        assert "author" in self.fields
+        author_full = self.author  # type: ignore
+        self.author = self.author.abbreviate(middle=middle)  # type:ignore
+        self.author_full = author_full
+        return self
+
+    # def abbreviate_journals()
+    #   TODO
 
 
 @dataclass
@@ -308,5 +333,23 @@ class Bibliography:
         with open(path, "w") as fout:
             json.dump(bibtex, fout, indent=4)
 
-    # def abbreviate_names(TODO)
-    # def abbreviate_yournals(TODO)
+    def abbreviate_names(self, middle: bool) -> Bibliography:
+        """Abbreviate all author names from all entries.
+
+        Args:
+            middle (bool): Abbreviate the middle name.
+
+        Returns:
+            Bibliography: The full bibliography with abbreviated names.
+        """
+        abbreviated_entries = []
+        for entry in self.entries:
+            if "author" in entry.fields:
+                abbreviated_entries.append(entry.abbreviate_names(middle))
+            else:
+                abbreviated_entries.append(entry)
+        self.entries = abbreviated_entries
+        return self
+
+    # def abbreviate_journals(
+    # TODO)

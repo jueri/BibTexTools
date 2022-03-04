@@ -63,9 +63,18 @@ class TestClassBibliography:
         assert os.path.isfile(file_path)
         os.remove(file_path)
 
-    def test_to_bib_fields(self):
-        pass
-        # TODO
+    def test_to_bib_fields(self, bib_obj_full):
+        fields = ["author", "title"]
+        file_path = os.path.join("BibTexTools", "tests", "data", "to_bib.bib")
+        bib_obj_full.to_bib(file_path, fields)
+
+        parser_obj = Parser()
+        parsed_bibtex = parser_obj.from_file(file_path)
+        all_fields = []
+        for entry in parsed_bibtex.entries:
+            all_fields += entry.fields
+        fields += ["key", "type"]  # allways present
+        assert set(fields) == set(all_fields)
 
     def test_to_json_exists(self, bib_obj_full):
         file_path = os.path.join("BibTexTools", "tests", "data", "to_json.json")
@@ -86,6 +95,34 @@ class TestClassBibliography:
         assert ref_file == new_file
         os.remove(file_path)
 
-    def test_to_json_fields(self):
-        pass
-        # TODO
+    def test_to_json_fields(self, bib_obj_full):
+        fields = ["author", "title"]
+        file_path = os.path.join("BibTexTools", "tests", "data", "to_json_fields.json")
+        bib_obj_full.to_json(file_path, fields)
+        with open(file_path, "r") as fin:
+            to_json_fields = json.load(fin)
+
+        docs = list(to_json_fields.keys())
+        all_keys = []
+        for doc in docs:
+            all_keys += list(to_json_fields[doc].keys())
+        assert set(all_keys) == set(fields)
+
+    def test_abbreviate_names(self, bib_obj_full):
+        bib_obj_full = bib_obj_full.abbreviate_names(True)
+        assert (
+            bib_obj_full.entries[0].author.author_list[0].name_short
+            == "von A1_Last, A."
+        )
+        assert (
+            bib_obj_full.entries[0].author.author_list[1].name_short
+            == "von A2_Last, A."
+        )
+        assert (
+            bib_obj_full.entries[1].author.author_list[0].name_short
+            == "von B1_Last, B."
+        )
+        assert (
+            bib_obj_full.entries[1].author.author_list[1].name_short
+            == "von B2_Last, B."
+        )
