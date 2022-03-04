@@ -45,40 +45,17 @@ def extract_content_of_field(field_value: str) -> str:
     return field_value.replace("{", "").replace("}", "")
 
 
-class Field:
-    """BibTex field object containing a field name and a field value."""
-
-    def __init__(self, name, value):
-        self.name: str = name
-        self.value: str = value
-
-    def to_bibtex(self) -> str:
-        """Serialize the field object into a BibTex string.
-
-        Returns:
-            str: Bibtex string of the field.
-        """
-        return self.name + " = " + self.value
-
-    def to_dict(
-        self,
-    ) -> Dict[str, Union[str, int]]:
-        """Serielize the field object into a dictionary.
-
-        Returns:
-            str: Dictionary of the field.
-        """
-        value = extract_content_of_field(self.value)
-        return {self.name: int(value) if value.isdigit() else value}
-
-
 class Author:
     """Author name object."""
 
     def __init__(self, first, last):
         self.first = first
         self.last = last
-        self.mid = [str]
+        self.mid = []
+        self.name_string = self.make_name()
+
+    def make_name(self):
+        return " ".join([self.first] + self.mid + [self.last])
 
     def abbreviate(self, middle: bool) -> Author:
         """Abbreviate the author name, with or without middle names.
@@ -113,22 +90,53 @@ class Author:
             last = self.last.split(" ")[0]
         else:
             last = self.last
-
-        self.first_short = _abbreviate_name(self.first)
-        name_short = last + ", " + _abbreviate_name(self.first)
+        first_full = self.first
+        self.first = _abbreviate_name(self.first)
+        self.first_full = first_full
+        name_short = last + ", " + self.first
 
         if middle:
             mid_short = []
             for name in self.mid:
                 mid_short.append(_abbreviate_name(name))
                 name_short += " " + _abbreviate_name(name)
-            self.mid_short = mid_short
+            self.mid_full = self.mid
+            self.mid = mid_short
 
         if " Jr." in self.last:
             name_short += " Jr."
 
-        self.name_short = name_short
+        self.name_string_full = self.name_string
+        self.name_string = name_short
+
         return self
+
+
+class Field:
+    """BibTex field object containing a field name and a field value."""
+
+    def __init__(self, name, value):
+        self.name: str = name
+        self.value: str = value
+
+    def to_bibtex(self) -> str:
+        """Serialize the field object into a BibTex string.
+
+        Returns:
+            str: Bibtex string of the field.
+        """
+        return self.name + " = " + self.value
+
+    def to_dict(
+        self,
+    ) -> Dict[str, Any]:
+        """Serielize the field object into a dictionary.
+
+        Returns:
+            str: Dictionary of the field.
+        """
+        value = extract_content_of_field(self.value)
+        return {self.name: int(value) if value.isdigit() else value}
 
 
 class Author_field(Field):
@@ -195,7 +203,23 @@ class Author_field(Field):
         Returns:
             str: Field as BibTex string.
         """
-        return self.name + " = " + self.value.replace(" and ", " and\n")
+        return (
+            self.name
+            + " = {"
+            + " and\n".join([author.name_string for author in self.author_list])
+            + "}"
+        )
+
+    def to_dict(
+        self,
+    ) -> Dict[str, List[str]]:
+        """Serielize the field object into a dictionary.
+
+        Returns:
+            str: Dictionary of the field.
+        """
+        authors = [author.name_string for author in self.author_list]
+        return {self.name: authors}
 
 
 class Journal_field(Field):

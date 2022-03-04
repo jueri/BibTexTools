@@ -11,7 +11,7 @@ import pytest
 
 A_string = """@Atype{Akey,
 author    = {A1_First von A1_Last and
-            von A2_Last, A2_First},
+            A2_First von A2_Last},
 title     = {A_Title},
 journal   = {A_Journal},
 volume    = {A_Volume},
@@ -21,7 +21,7 @@ url       = {A_Url},
 
 A_string_fields = """@Atype{Akey,
 author    = {A1_First von A1_Last and
-            von A2_Last, A2_First},
+            A2_First von A2_Last},
 title     = {A_Title},
 }"""
 
@@ -78,10 +78,10 @@ class TestClassEntety:
     def test_author_abbreviation(self, entry_obj):
         entry_obj = entry_obj.abbreviate_names(middle=True)
 
-        assert entry_obj.author.author_list[0].name_short == "A1_Last, A. B."
-        assert entry_obj.author.author_list[1].name_short == "A2_Last, A. B."
-        assert entry_obj.author.author_list[2].name_short == "A3_Last, A. III."
-        assert entry_obj.author.author_list[3].name_short == "A4_Last, A. B. Jr."
+        assert entry_obj.author.author_list[0].name_string == "A1_Last, A. B."
+        assert entry_obj.author.author_list[1].name_string == "A2_Last, A. B."
+        assert entry_obj.author.author_list[2].name_string == "A3_Last, A. III."
+        assert entry_obj.author.author_list[3].name_string == "A4_Last, A. B. Jr."
 
     def test_to_bibtex(self, entry_obj_full):
         bibtex_str = entry_obj_full.to_bibtex()
@@ -96,7 +96,7 @@ class TestClassEntety:
         ref_dict = {
             "Akey": {
                 "type": "Atype",
-                "author": "A1_First von A1_Last and von A2_Last, A2_First",
+                "author": ["A1_First von A1_Last", "A2_First von A2_Last"],
                 "title": "A_Title",
                 "journal": "A_Journal",
                 "volume": "A_Volume",
@@ -111,4 +111,5 @@ class TestClassEntety:
         fields = ["type", "author", "title"]
         entry_dict = entry_obj_full.to_dict(fields)
         assert len(entry_dict["Akey"].keys()) == 3
+
         assert set(entry_dict["Akey"].keys()) == set(fields)

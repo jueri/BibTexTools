@@ -5,7 +5,7 @@ import json
 
 Bib_string = """@Atype{Akey,
 author    = {A1_First von A1_Last and
-            von A2_Last, A2_First},
+            A2_First von A2_Last},
 title     = {A_Title},
 journal   = {A_Journal},
 volume    = {A_Volume},
@@ -16,7 +16,7 @@ url       = {A_Url},
 
 @Btype{Bkey,
 author    = {B1_First von B1_Last and
-            von B2_Last, B2_First},
+            B2_First von B2_Last},
 title     = {B_Title},
 journal   = {B_Journal},
 volume    = {B_Volume},
@@ -26,14 +26,14 @@ url       = {B_Url},
 
 Bib_string_fields = """@Atype{Akey,
 author    = {A1_First von A1_Last and
-            von A2_Last, A2_First},
+            A2_First von A2_Last},
 title     = {A_Title},
 }
 
 
 @Btype{Bkey,
 author    = {B1_First von B1_Last and
-            von B2_Last, B2_First},
+            B2_First von B2_Last},
 title     = {B_Title},
 }"""
 
@@ -111,18 +111,18 @@ class TestClassBibliography:
     def test_abbreviate_names(self, bib_obj_full):
         bib_obj_full = bib_obj_full.abbreviate_names(True)
         assert (
-            bib_obj_full.entries[0].author.author_list[0].name_short
+            bib_obj_full.entries[0].author.author_list[0].name_string
             == "von A1_Last, A."
         )
         assert (
-            bib_obj_full.entries[0].author.author_list[1].name_short
+            bib_obj_full.entries[0].author.author_list[1].name_string
             == "von A2_Last, A."
         )
         assert (
-            bib_obj_full.entries[1].author.author_list[0].name_short
+            bib_obj_full.entries[1].author.author_list[0].name_string
             == "von B1_Last, B."
         )
         assert (
-            bib_obj_full.entries[1].author.author_list[1].name_short
+            bib_obj_full.entries[1].author.author_list[1].name_string
             == "von B2_Last, B."
         )
