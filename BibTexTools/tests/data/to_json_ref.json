@@ -1,0 +1,26 @@
+{
+    "Akey": {
+        "type": "Atype",
+        "author": [
+            "A1_First von A1_Last",
+            "A2_First von A2_Last"
+        ],
+        "title": "A_Title",
+        "journal": "A_Journal",
+        "volume": "A_Volume",
+        "year": "A_Year",
+        "url": "A_Url"
+    },
+    "Bkey": {
+        "type": "Btype",
+        "author": [
+            "B1_First von B1_Last",
+            "B2_First von B2_Last"
+        ],
+        "title": "B_Title",
+        "journal": "B_Journal",
+        "volume": "B_Volume",
+        "year": "B_Year",
+        "url": "B_Url"
+    }
+}
