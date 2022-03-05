@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 mypy = "*"
 types-requests = "*"
+click = "*"
+bibtextools = {editable = true, path = "."}
 
 [dev-packages]
 black = "*"
@@ -13,6 +15,10 @@ pytest = "*"
 mypy = "*"
 ipykernel = "*"
 bibtextools = {editable = true, path = "."}
+coverage = "*"
 
 [requires]
 python_version = "3"
+
+[scripts]
+test = "pytest"
