@@ -19,7 +19,7 @@ bibtextools = {editable = true, path = "."}
 coverage = "*"
 
 [requires]
-python_version = "3"
+python_version = "3.8"
 
 [scripts]
 test = "pytest"
