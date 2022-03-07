@@ -328,7 +328,7 @@ class Bibliography:
         Returns:
             str: Bibtex string of the Bibliography.
         """
-        assert len(self.entries) > 1
+        assert len(self.entries) >= 1
         bibtex = []
         for entry in self.entries:
             bibtex.append(entry.to_bibtex(fields))
@@ -350,7 +350,7 @@ class Bibliography:
             path (str): Path to the JSON file.
         """
         bibtex: Dict[str, Any] = {}
-        assert len(self.entries) > 1
+        assert len(self.entries) >= 1
         for entry in self.entries:
             bibtex = {**bibtex, **entry.to_dict(fields)}
 
