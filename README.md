@@ -1,37 +1,71 @@
-# Clean BibTeX references
-**Clean BibTeX** is a handy tool to resolve incomplete or misleading BibTeX references in computer science.
-The CLI tool parses publication titles from a BibTeX and retrieves high-quality references from [dblp](https://dblp.uni-trier.de/).
+# 📚 BibTexTools
+<center><img alt="GitHub Pipenv locked Python version" src="https://img.shields.io/github/pipenv/locked/python-version/jueri/BibTexTools"></center>
 
-<center><a href="https://huggingface.co/spaces/jueri/clean_bibtex"><img alt="Spaces Demo" src="https://img.shields.io/badge/%F0%9F%A4%97-Spaces%20Demo-yellow?style=for-the-badge"></a>
-</center>
+**BibTexTools** is a handy tool to parse and manipulate BibTex bibliographies and references. **BibTexTools** can abbreviate author names and resolve incomplete references based on the reference title and the computer science bibliography [dblp](https://dblp.uni-trier.de/).
+
+If you encounter any error or parsing mistake, feel free to open a new [issue](https://github.com/jueri/BibTexTools/issues/new).
 <br>
 
-## Installation:
-**Clean BibTeX** can be installed using pip and this repository:
+## ⚙️ Installation:
+**BibTexTools** can be installed using pip and this repository:
 ```
-pip install git+https://github.com/jueri/clean_bibtex.git
+pip install git+https://github.com/jueri/BibTexTools.git
 ```
 
-Alternatively, you can clone this repository and install it from source.
+Alternatively, you can clone this repository and install it from the source.
 1. Clone the repository:
-` git clone https://github.com/jueri/clean_bibtex.git`
+` git clone https://github.com/jueri/BibTexTools.git`
 
 2. Change working directory:
-`cd clean_bibtex`
+`cd BibTexTools`
 
 3. install with:
-`pip install -e .`
+`pip install .`
 
 <br>
 
-## Usage:
-To resolve a `.bib` file, simply call `clean_bibtex` and specify an input and output file:
+## 📖 Usage:
+**BibTexTools** provides the following commands:
 ```
-clean_bibtex [input file] [output file]
+Usage: BibTexTools [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  abbreviate-authors  Abbreviate the author names of a BibTex bibliography
+  clean               Clean a BibTex bibliography
+```
+
+A bibliography file as input and an output destination need to be specified for all operations.
+
+### Abbreviate-authors:
+The `abbreviate-authors` command will abbreviate all author names from a bibliography. The middle names are also included if the `-m` flag is set.
+```
+Usage: BibTexTools abbreviate-authors [OPTIONS] INPUT OUTPUT
+
+  Abbreviate the author names of a BibTex bibliography
+
+Options:
+  -m, --middle_names  Include the middle names
+  --help              Show this message and exit.
+```
+
+### Clean:
+The `clean` command may help resolve incomplete references by retrieving high-quality references from [dblp](https://dblp.uni-trier.de/).
+```
+Usage: BibTexTools clean [OPTIONS] INPUT OUTPUT
+
+  Clean a BibTex bibliography
+
+Options:
+  -k, --keep_keys     Keep original keys
+  -u, --keep_unknown  Keep entries that can not be cleaned
+  --help              Show this message and exit.
 ```
 <br>
 
-## Example:
+## ✨ Example:
 Imagine you found an interesting paper online and saved it to your collection. Unluckily, in addition to the paper itself, you only got incomplete metadata like this:
 ```BibTeX
 @article{devlin2018bert,
@@ -41,7 +75,7 @@ Imagine you found an interesting paper online and saved it to your collection. U
 }
 ```
 
-**Clean BibTeX** will extract the name of the paper and retrieve complete BibTeX metadata from dblp, resolving the reference into:
+**BibTexTools** will extract the title of the paper and retrieve complete BibTeX metadata from dblp, resolving the reference into:
 
 ```BibTeX
 @inproceedings{DBLP:conf/naacl/DevlinCLT19,
@@ -67,5 +101,4 @@ Imagine you found an interesting paper online and saved it to your collection. U
   biburl    = {https://dblp.org/rec/conf/naacl/DevlinCLT19.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
-
 ```

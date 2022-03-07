@@ -1,0 +1,16 @@
+{
+    "Akey": {
+        "title": "A_Title",
+        "author": [
+            "A1_First von A1_Last",
+            "A2_First von A2_Last"
+        ]
+    },
+    "Bkey": {
+        "title": "B_Title",
+        "author": [
+            "B1_First von B1_Last",
+            "B2_First von B2_Last"
+        ]
+    }
+}
