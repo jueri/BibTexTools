@@ -8,6 +8,7 @@ mypy = "*"
 types-requests = "*"
 click = "*"
 bibtextools = {editable = true, path = "."}
+streamlit = "*"
 
 [dev-packages]
 black = "*"
