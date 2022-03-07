@@ -1,4 +1,5 @@
 import streamlit as st
+from BibTexTools.CLI import abbreviate_authors
 from BibTexTools.parser import Parser
 from BibTexTools.cleaner import Cleaner
 from io import StringIO
@@ -15,20 +16,32 @@ EXAMPLE = """@article{devlin2018bert,
 
 
 @st.cache
-def clean(input, keep_keys, keep_unknown):
+def process(
+    input,
+    clean,
+    keep_keys,
+    keep_unknown,
+    abbreviate,
+    delete_middle_names,
+):
     """Clean a BibTex bibliography"""
     # parse
     parser_obj = Parser()
     bib = parser_obj.parse(input)
 
     # process
-    cleaner_obj = Cleaner(keep_keys=keep_keys, keep_unknown=keep_unknown)
-    processed_bib = cleaner_obj.clean(bib)
+    if clean:
+        cleaner_obj = Cleaner(
+            keep_keys=keep_keys,
+            keep_unknown=keep_unknown,
+        )
+        bib = cleaner_obj.clean(bib)
 
-    return processed_bib.to_bibtex()
-    # # write
-    # bibtex_str = processed_bib.to_bibtex()
-    # output.write(bibtex_str)
+    if abbreviate:
+        delete_middle_names = not delete_middle_names
+        bib = bib.abbreviate_names(delete_middle_names)
+
+    return bib.to_bibtex()
 
 
 col1, col2 = st.columns(2)
@@ -45,9 +58,11 @@ with col1:
             stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
             user_input = stringio.read()
     with st.form("my_form"):
-
+        clean = st.checkbox("Clean bibliography")
         keep_keys = st.checkbox("Keep original keys")
-        keep_unknown = st.checkbox("Keep enties that can not be cleaned")
+        keep_unknown = st.checkbox("Keep entries that can not be cleaned")
+        abbreviate = st.checkbox("Abbreviate author names")
+        delete_middle_names = st.checkbox("Delete middle names")
 
         submitted = st.form_submit_button("Clean")
 
@@ -59,7 +74,14 @@ with col2:
             st.error("Pleas choose a file or past bibtex information first.")
         else:
             with st.spinner("Cleaning publications. This may take a while..."):
-                processed_bib = clean(user_input, keep_keys, keep_unknown)
+                processed_bib = process(
+                    user_input,
+                    clean,
+                    keep_keys,
+                    keep_unknown,
+                    abbreviate,
+                    delete_middle_names,
+                )
 
             if output_option == "Text":
                 st.code(processed_bib, language="latex")
