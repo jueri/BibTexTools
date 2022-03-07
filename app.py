@@ -1,4 +1,3 @@
-from black import out
 import streamlit as st
 from BibTexTools.parser import Parser
 from BibTexTools.cleaner import Cleaner
