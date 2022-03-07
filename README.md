@@ -1,5 +1,5 @@
 # 📚 BibTexTools
-<center><img alt="GitHub Pipenv locked Python version" src="https://img.shields.io/github/pipenv/locked/python-version/jueri/BibTexTools"></center>
+<center><img alt="GitHub Pipenv locked Python version" src="https://img.shields.io/github/pipenv/locked/python-version/jueri/BibTexTools"> [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/jueri/bibtextools/app/app.py)</center>
 
 **BibTexTools** is a handy tool to parse and manipulate BibTex bibliographies and references. **BibTexTools** can abbreviate author names and resolve incomplete references based on the reference title and the computer science bibliography [dblp](https://dblp.uni-trier.de/).
 
